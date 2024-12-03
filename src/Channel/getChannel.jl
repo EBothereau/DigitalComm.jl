@@ -174,7 +174,12 @@ function initChannel(profile::String,carrierFreq::Union{Int,Float64},samplingFre
 		tapDelaySecond		= [0;   50;  120;  200 ; 230;  500; 1600;  2300; 5000] * 1e-9;
 		delaySpread		    = ceil(maximum(tapDelaySecond) * samplingFreq);
 		return ChannelModel("ETU",carrierFreq,samplingFreq,0,powerProfile,tapDelaySecond,0,delaySpread);
-
+	elseif profile == "TDLC"
+		normalized_ds = [0 ;0.2099;0.2219;0.2329;0.2176;0.6366;0.6448;0.6560;0.6584;0.7935;0.8213;0.9336;1.2285;1.3083;2.1704;2.7105;4.2589;4.6003;5.4902;5.6077;6.3065;6.6374;7.0427;8.6523]
+		tapDelaySecond = normalized_ds * 100e-9   # using nominal delay spread cf ETSI TR 138 900 V14.2.0 (2017-06) page 67 
+		delaySpread		    = ceil(maximum(tapDelaySecond) * samplingFreq);
+		powerProfile =[-4.4;-1.2 ;-3.5 ;-5.2;-2.5;0;-2.2;-3.9;-7.4;-7.1;-10.7;-11.1;-5.1 ;-6.8;-8.7;-13.2;-13.9;-13.9;-15.8;-17.1;-16;-15.7;-21.6;-22.8;]
+		return ChannelModel("TDLC",carrierFreq,samplingFreq,0,powerProfile,tapDelaySecond,0,delaySpread);
 	end
 end
 
